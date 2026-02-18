@@ -64,42 +64,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "hrms_project.wsgi.application"
 
-# Database — SQLite for development, PostgreSQL for production
-DATABASE_URL = os.environ.get("DATABASE_URL", "")
+import dj_database_url
 
-if DATABASE_URL:
-    # Production: Parse DATABASE_URL for PostgreSQL
-    import re
-    match = re.match(
-        r"postgres(?:ql)?://(?P<user>[^:]+):(?P<password>[^@]+)@(?P<host>[^:]+):(?P<port>\d+)/(?P<name>.+)",
-        DATABASE_URL,
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=not DEBUG,
     )
-    if match:
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.postgresql",
-                "NAME": match.group("name"),
-                "USER": match.group("user"),
-                "PASSWORD": match.group("password"),
-                "HOST": match.group("host"),
-                "PORT": match.group("port"),
-            }
-        }
-    else:
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.sqlite3",
-                "NAME": BASE_DIR / "db.sqlite3",
-            }
-        }
-else:
-    # Development: SQLite
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
+
+
+
+
 
 # REST Framework
 REST_FRAMEWORK = {
