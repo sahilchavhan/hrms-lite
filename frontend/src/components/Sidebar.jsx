@@ -75,7 +75,6 @@ export default function Sidebar() {
             </nav>
 
             <div className="sidebar-footer">
-                <p className="sidebar-footer-text">HRMS Lite v1.0</p>
             </div>
         </aside>
     );
