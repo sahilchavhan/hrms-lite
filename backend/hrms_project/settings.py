@@ -23,7 +23,7 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("true", "1", "yes")
 #     "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1"
 # ).split(",")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [ '*' ]
 
 # APPLICATION DEFINITION
 INSTALLED_APPS = [
@@ -117,7 +117,26 @@ else:
         }
     }
 
-
+POSTGRES_LOCALLY= True
+if ENVIRONMENT == "production" or POSTGRES_LOCALLY == True:
+    DATABASES = {
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.postgresql',
+        #     'NAME': os.environ.get("DB_NAME"),
+        #     'USER': os.environ.get("DB_USER"),
+        #     'PASSWORD': os.environ.get("DB_PASSWORD"),
+        #     'HOST': os.environ.get("DB_HOST"),
+        #     'PORT': os.environ.get("DB_PORT")
+        # }
+        'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 
