@@ -1,6 +1,11 @@
 import os
+
+
 from pathlib import Path
 import dj_database_url
+
+from dotenv import load_dotenv
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -14,9 +19,11 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("true", "1", "yes")
 
 # ALLOWED HOSTS
-ALLOWED_HOSTS = os.environ.get(
-    "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1"
-).split(",")
+# ALLOWED_HOSTS = os.environ.get(
+#     "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1"
+# ).split(",")
+
+ALLOWED_HOSTS = ["*"]
 
 # APPLICATION DEFINITION
 INSTALLED_APPS = [
@@ -66,15 +73,53 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "hrms_project.wsgi.application"
 
-# DATABASES
-# Use DATABASE_URL from Railway if available, fallback to SQLite for local development
-DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=not DEBUG  # SSL required in production
-    )
-}
+# DB_LIVE = os.getenv("DB_LIVE")
+
+# if DB_LIVE in ["false", False]:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.getenv("DB_NAME"),
+#             'USER': os.getenv("DB_USER"),
+#             'PASSWORD': os.getenv("DB_PASSWORD"),
+#             'HOST': os.getenv("DB_HOST"),
+#             'PORT': os.getenv("DB_PORT")
+#         }
+#     }
+
+
+
+DB_LIVE = os.getenv("DB_LIVE", "false").lower()  # default to "false" if not set
+
+if DB_LIVE == "false":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASSWORD"),
+            'HOST': os.getenv("DB_HOST"),
+            'PORT': os.getenv("DB_PORT")
+        }
+    }
+
+
+
+
 
 # REST Framework
 REST_FRAMEWORK = {
