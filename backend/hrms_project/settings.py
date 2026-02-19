@@ -118,7 +118,7 @@ else:
     }
 
 POSTGRES_LOCALLY= True
-if ENVIRONMENT == "production" or POSTGRES_LOCALLY == True:
+if POSTGRES_LOCALLY == True:
     DATABASES = {
         # 'default': {
         #     'ENGINE': 'django.db.backends.postgresql',
