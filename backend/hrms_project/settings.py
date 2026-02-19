@@ -1,22 +1,24 @@
-"""
-Django settings for HRMS Lite project.
-"""
-
 import os
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SECRET KEY
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
     "django-insecure-hrms-dev-key-change-in-production-abc123xyz"
 )
 
+# DEBUG
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("true", "1", "yes")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+# ALLOWED HOSTS
+ALLOWED_HOSTS = os.environ.get(
+    "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1"
+).split(",")
 
-# Application definition
+# APPLICATION DEFINITION
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -64,17 +66,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "hrms_project.wsgi.application"
 
-import dj_database_url
-
+# DATABASES
+# Use DATABASE_URL from Railway if available, fallback to SQLite for local development
 DATABASES = {
     "default": dj_database_url.config(
-        default="sqlite:///db.sqlite3"
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        ssl_require=not DEBUG  # SSL required in production
     )
 }
-
-
-
-
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -107,4 +107,5 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# Default primary key
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
