@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get(
     "django-insecure-hrms-dev-key-change-in-production-abc123xyz"
 )
 
-# DEBUG
+# DEBUG.
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("true", "1", "yes")
 
 # ALLOWED HOSTS
